@@ -1,0 +1,30 @@
+import setCookieOnReq from "@/utils/setCookieOnReq";
+import PostList from "app/(blogs)/blogs/_components/PostList";
+import { getPosts } from "@/services/postServices";
+import queryString from "query-string";
+import { cookies } from "next/headers";
+
+async function Category({ params, searchParams }) {
+  const { categorySlug } = params;
+
+  const queries = `${queryString.stringify(
+    searchParams
+  )}  &categorySlug=${categorySlug}`;
+  const cookieStore = cookies();
+  const options = setCookieOnReq(cookieStore);
+  const {posts} = await getPosts(queries, options);
+
+  return (
+    <div>
+      {posts.length === 0 ? (
+        <p className="text-lg text-secondary-600">
+          پستی در این دسته بندی پیدا نشد
+        </p>
+      ) : (
+        <PostList posts={posts}/>
+      )}
+    </div>
+  );
+}
+
+export default Category;

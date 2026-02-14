@@ -1,0 +1,129 @@
+"use client";
+import Button from "@/ui/Button";
+import RHFTextField from "@/ui/RHFTextField";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAuth } from "@/context/AuthContext";
+import Link from "next/link";
+import { useState } from "react";
+import SpinnerMini from "@/ui/SpinnerMini";
+import { EnvelopeIcon, LockClosedIcon, UserIcon } from "@heroicons/react/24/outline";
+
+const schema = yup.object({
+  name: yup
+    .string()
+    .min(5, "نام و نام خانوادگی باید حداقل ۵ کاراکتر باشد")
+    .max(30, "نام و نام خانوادگی نمی‌تواند بیشتر از ۳۰ کاراکتر باشد")
+    .required("نام و نام خانوادگی الزامی است"),
+  email: yup
+    .string()
+    .email("ایمیل نامعتبر است")
+    .required("ایمیل الزامی است"),
+  password: yup
+    .string()
+    .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
+    .required("رمز عبور الزامی است"),
+});
+
+function Signup() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+    mode: "onTouched",
+  });
+
+  const { signup } = useAuth();
+
+  const onSubmit = async (values) => {
+    setIsSubmitting(true);
+    try {
+      await signup(values);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="min-h-[80vh] flex items-center justify-center px-4 sm:px-6 py-8">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-secondary-100">
+        <div className="text-center mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-secondary-800 mb-2">
+            ثبت‌نام در نکست بلاگ
+          </h1>
+          <p className="text-secondary-500 text-sm sm:text-base">
+            با ثبت‌نام می‌توانید از همه امکانات استفاده کنید
+          </p>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <RHFTextField
+            label="نام و نام خانوادگی"
+            name="name"
+            register={register}
+            isRequired
+            errors={errors}
+            icon={<UserIcon className="w-5 h-5 text-secondary-400" />}
+            placeholder="علی محمدی"
+          />
+          <RHFTextField
+            label="ایمیل"
+            name="email"
+            register={register}
+            dir="ltr"
+            isRequired
+            errors={errors}
+            icon={<EnvelopeIcon className="w-5 h-5 text-secondary-400" />}
+            placeholder="example@gmail.com"
+          />
+          <RHFTextField
+            label="رمز عبور"
+            name="password"
+            register={register}
+            type="password"
+            dir="ltr"  
+            isRequired
+            errors={errors}
+            icon={<LockClosedIcon className="w-5 h-5 text-secondary-400" />}
+            placeholder="حداقل ۶ کاراکتر"
+          />
+          <Button 
+            type="submit" 
+            variant="primary" 
+            className="w-full py-3 text-base font-medium mt-4 flex items-center justify-center gap-2"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <SpinnerMini />
+                <span>در حال ثبت‌نام...</span>
+              </>
+            ) : (
+              "ثبت‌نام"
+            )}
+          </Button>
+        </form>
+
+        <div className="mt-6 text-center">
+          <p className="text-secondary-500 text-sm sm:text-base">
+            قبلاً ثبت‌نام کرده‌اید؟{" "}
+            <Link 
+              href="/signin" 
+              className="text-primary-600 hover:text-primary-700 font-medium transition-colors"
+            >
+              وارد شوید
+            </Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Signup;
