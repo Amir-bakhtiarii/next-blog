@@ -1,10 +1,10 @@
-import Breadcrumbs from "@/ui/Breadcrumbs";
+import BreadCrumbs from "@/ui/BreadCrumbs";
 import CreatePostForm from "./_/CreatePostForm";
 
 export default function page() {
   return (
     <div>
-      <Breadcrumbs
+      <BreadCrumbs
         breadcrumbs={[
           {
             label: "پست ها",

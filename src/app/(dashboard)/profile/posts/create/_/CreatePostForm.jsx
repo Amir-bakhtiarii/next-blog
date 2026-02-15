@@ -1,5 +1,5 @@
 "use client";
-import { useCategories } from "@/hooks/usecategories";
+import { useCategories } from "@/hooks/useCategories";
 import Button from "@/ui/Button";
 import ButtonIcon from "@/ui/ButtonIcon";
 import FileInput from "@/ui/FileInput";
