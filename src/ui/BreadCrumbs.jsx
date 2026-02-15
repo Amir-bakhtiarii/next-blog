@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export default function Breadcrumbs({ breadcrumbs }) {
+export default function BreadCrumbs({ breadcrumbs }) {
   return (
     <nav aria-label="Breadcrumb" className="mb-8 block">
       <ol className="flex text-lg gap-x-2">
